@@ -6,11 +6,14 @@
     <div class="content">
       <div>
         <h1 class="title">Choose your dream destination...</h1>
-        <div class="links">
-          <a href="#" class="giant-button"> San Francisco, USA </a>
-          <a href="#" class="giant-button"> Québec, Canada </a>
-          <a href="#" class="giant-button"> Bora Bora, Polynésie </a>
-          <a href="#" class="giant-button"> Torres del Paine, Chile </a>
+        <div v-if="dreamDestinations.length > 0" class="links">
+          <a 
+            v-for="dest in dreamDestinations" 
+            :key="dest.code" 
+            @click="$router.push({name: 'tickets', params: dest.code })"
+            class="giant-button"
+            >{{ dest.name }}
+            </a>
         </div>
       </div>
     </div>
@@ -18,7 +21,27 @@
 </template>
 
 <script>
-export default {}
+export default {
+  name:'destinations',
+  data(){
+    return {
+      dreamDestinations: []
+    };
+  },
+  computed:{},
+  mounted(){
+    this.getDreamDestinations()
+  },
+  methods: {
+    async getDreamDestinations() {
+      let res = await this.$store.dispatch("getDreamDestinations");
+      console.log(res.data.data)
+      this.dreamDestinations = res.data;
+    }
+  }
+}
+
+
 </script>
 
 <style lang="scss">
